@@ -1,0 +1,20 @@
+
+
+<div class="form-group">
+  <div class="row">
+<input type="text" [formControl]="typeahead" placeholder="Enter Country Name" (input)="autosuggest()">
+<div class="suggestions" *ngIf="suggestions.length">
+  <p *ngFor="let s of suggestions">{{s}}</p>
+</div>
+</div>
+</div>
+
+<br>
+<br>
+<br>
+
+<select #selectElem>
+    <option *ngFor="let item of items" [value]="item" [selected]="item === selectedValue">{{item}} option</option>
+</select>
+
+    <h4> {{selectedValue}}</h4> 

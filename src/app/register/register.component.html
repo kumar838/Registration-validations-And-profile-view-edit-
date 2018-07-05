@@ -1,0 +1,152 @@
+<div class="form-area">
+  <form [formGroup]="contactForm" (ngSubmit)="postData(contactForm.value)" role="form" enctype="multipart/form-data">
+    <br style="clear:both">
+    <h3 style="margin-bottom: 25px; text-align: center;">Contact Form</h3>
+    <div class="form-group">
+      <input type="text" class="form-control" id="name" (keypress)="notallownumsvalidate($event)" formControlName="name" value=""
+        placeholder="Name" required>
+
+      <div *ngIf="contactForm.controls['name'].touched && !contactForm.controls['name'].valid">
+        <span *ngIf="contactForm.controls['name'].hasError('required') ">Name is required </span>
+      </div>
+
+      <div *ngIf="contactForm.controls['name'].hasError('minlength') && !contactForm.controls['name'].hasError('required')">
+        <span>name should contain min 6 characters</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control" id="email" formControlName="email" placeholder="Email">
+      <div *ngIf="contactForm.controls['email'].touched && !contactForm.controls['email'].valid">
+        <span *ngIf="contactForm.controls['email'].hasError('required') "> Email is required </span>
+      </div>
+
+      <div *ngIf="contactForm.controls['email'].touched && !contactForm.controls['email'].hasError('required')">
+        <span *ngIf="contactForm.controls['email'].hasError('pattern')"> Email not valid </span>
+        <!-- <span *ngIf="contactForm.controls['email'].hasError('email')">  Email not valid </span> -->
+      </div>
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control" id="mobile" (keypress)="notallowcharsvalidate($event)" formControlName="mobile" placeholder="Mobile Number">
+
+      <div *ngIf="contactForm.controls['mobile'].touched && !contactForm.controls['mobile'].valid">
+        <span *ngIf="contactForm.controls['mobile'].hasError('required') "> Mobile is required </span>
+      </div>
+
+
+      <div *ngIf="contactForm.controls['mobile'].touched && !contactForm.controls['mobile'].hasError('required')">
+        <span *ngIf="contactForm.controls['mobile'].hasError('pattern')"> Allows numbers Only </span>
+        <!-- <span *ngIf="contactForm.controls['email'].hasError('email')">  Email not valid </span> -->
+      </div>
+    </div>
+
+    <div class="form-group">
+      <select formControlName="country" class="form-control" placeholder="Select Country">
+        <option value="">Select Country</option>
+        <option *ngFor="let cntry of countries" value="{{cntry}}">{{cntry}}</option>
+      </select>
+
+
+      <div *ngIf="contactForm.controls['country'].touched && !contactForm.controls['country'].valid">
+        <span *ngIf="contactForm.controls['country'].hasError('required')">Select Country</span>
+
+      </div>
+      <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Add Country</button>
+    </div>
+    <div class="form-group">
+      <input type="radio" formControlName="gender" value="male" checked> Male
+      <input type="radio" formControlName="gender" value="female"> Female
+      <br>
+    </div>
+
+    <!-- <div class="col-md-6">
+      <div class="form-group" *ngFor="let skill of skills" >
+        <input type="checkbox" name="skillsdata" formControlName="skillsdata" (change)="onChange(skill.name, $event.target.checked)" value="{{skill.name}}">{{skill.name}}
+         </div>
+      </div>  -->
+
+    <div class="form-group">
+      <div *ngFor="let data of skills">
+        <input type="checkbox" (change)="onChange(data.name, $event.target.checked)" [checked]="isChecked(data.name)"> {{data.name}}
+        <br>
+      </div>
+      <span *ngIf="skillerror">select at least one checkbox</span>
+    </div>
+
+
+    <div class="form-group">
+      <input type="date" formControlName="birthday" [min]="getToday()">
+    </div>
+
+    <div class="form-group">
+      <input type="text" class="form-control" id="subject" formControlName="subject" placeholder="Subject">
+      <div *ngIf="contactForm.controls['subject'].dirty && !contactForm.controls['subject'].valid">
+        <span *ngIf="contactForm.controls['subject'].hasError('minlength') "> Min 5 chars Required </span>
+        <span *ngIf="contactForm.controls['subject'].hasError('maxlength') "> Max 20 chars allowed </span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <textarea class="form-control" formControlName="message" type="textarea" id="message" placeholder="Message" maxlength="140"
+        rows="3" #message></textarea>
+      <span>{{140-message.value.length}} of 140</span>
+      <!-- <span class="help-block"><p id="characterLeft" class="help-block ">You have reached the limit</p></span> -->
+    </div>
+
+    <div class="form-group col-md-8">
+      <select formControlName="pan" class="form-control" placeholder="Select Country" (click)="panvalid($event.target.value)">
+        <option value="">You have Pan</option>
+        <option value="yes">YES </option>
+        <option value="no">NO </option>
+      </select>
+    </div>
+
+    <div class="form-group" *ngIf="pandispaly">
+      <input type="text" class="form-control" id="pannum" formControlName="pannum" placeholder="PAN number">
+    </div>
+
+
+    <div class="form-group">
+      <label class="col-lg-4 col-md-6 col-sm-5 col-xs-12 control-label">Image</label>
+      <div class="col-sm-4">
+        <!-- <input type="file" id="item_image" name="item_image" ng2FileSelect [uploader]="uploader" /> -->
+        <input type="file" accept="image/*" formControlName="item_image" (change)="changeListener($event)">
+        <input type="hidden" formControlName="item_image_size" [(ngModel)]="Filesize">
+      </div>
+      <div *ngIf="imagediv">
+        <img height="50" width="50" src="{{ItemImage}}">
+        <!-- <div class="col-sm-3" *ngIf="updateId.ItemImage!='' && updateId.ItemImage!==undefined">
+            <img height="20" width="30" src="{{logoUrl+updateId.item_image}}">
+          </div>-->
+      </div>
+    </div>
+
+    <input type="checkbox" formControlName="agree" value="check" id="agree" /> I have read and agree to the Terms and Conditions and Privacy Policy
+
+    <button id="submit" name="submit" class="btn btn-primary pull-right" [disabled]="!contactForm.valid">Submit Form</button>
+    <button type="button" class="btn btn-default pull-right" (click)="reset()">Reset</button>
+  </form>
+
+
+  <!-- <pre>{{contactForm.value | json}}</pre>  -->
+</div>
+
+<!-- Modal -->
+<form #addctryForm="ngForm">
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body">
+          <label>Add country</label>
+          <input type="text" name="addctry" placeholder="Country Name" [(ngModel)]="cntryname">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal" (click)="onSubmitctry(addctryForm.value)"  data-backdrop="static" >Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
